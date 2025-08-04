@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint)",
+      "Bash(timeout 15 npm run dev)",
+      "Bash(npx tsc:*)",
+      "Bash(powershell:*)",
+      "Bash(mkdir:*)",
+      "Bash(move .next temp_next)",
+      "Bash(mv:*)",
+      "Bash(set NEXT_TELEMETRY_DISABLED=1)"
+    ],
+    "deny": []
+  }
+}

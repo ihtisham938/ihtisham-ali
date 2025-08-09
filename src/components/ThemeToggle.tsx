@@ -7,7 +7,11 @@ export default function ThemeToggle() {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="fixed top-8 right-8 z-50 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300"
+      className={`fixed top-8 right-8 z-50 p-3 rounded-full backdrop-blur-sm border transition-all duration-300 ${
+        theme === 'dark' 
+          ? 'bg-white/10 border-white/20 hover:bg-white/20' 
+          : 'bg-gray-200/80 border-gray-300/50 hover:bg-gray-300/80 shadow-lg'
+      }`}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       initial={{ opacity: 0, scale: 0.8 }}
@@ -18,7 +22,7 @@ export default function ThemeToggle() {
         initial={false}
         animate={{ rotate: theme === 'dark' ? 180 : 0 }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="w-6 h-6 text-white"
+        className={`w-6 h-6 ${theme === 'dark' ? 'text-white' : 'text-gray-700'}`}
       >
         {theme === 'dark' ? (
           <svg viewBox="0 0 24 24" fill="currentColor">

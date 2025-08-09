@@ -1,11 +1,23 @@
-import { motion } from 'framer-motion';
-import { skills, fadeInUp, staggerContainer } from '@/data/portfolio';
-import { useState } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { skills } from '@/data/portfolio';
+import { useState, useRef } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function Skills() {
   const { theme } = useTheme();
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  
+  // Advanced scroll animations
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
+  
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
+  const headerY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const gridY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
 
   const getGradientColors = (colorClass: string) => {
     const colorMap: { [key: string]: string } = {
@@ -26,17 +38,36 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" className={`w-full py-8 px-8 transition-colors duration-500 ${
-      theme === 'dark' ? 'bg-slate-900' : 'bg-slate-50'
-    }`}>
+    <motion.section 
+      id="skills" 
+      ref={ref}
+      className={`w-full py-8 px-8 relative overflow-hidden transition-colors duration-500 ${
+        theme === 'dark' ? 'bg-slate-900' : 'bg-slate-50'
+      }`}
+    >
+      {/* Dynamic background elements */}
+      <motion.div 
+        className="absolute inset-0 w-full h-full"
+        style={{ y: backgroundY }}
+      >
+        <div className={`absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl opacity-5 ${
+          theme === 'dark' ? 'bg-cyan-400' : 'bg-cyan-500'
+        }`}></div>
+        <div className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-5 ${
+          theme === 'dark' ? 'bg-purple-400' : 'bg-purple-500'
+        }`}></div>
+        <div className={`absolute top-1/2 right-1/3 w-48 h-48 rounded-full blur-2xl opacity-5 ${
+          theme === 'dark' ? 'bg-pink-400' : 'bg-pink-500'
+        }`}></div>
+      </motion.div>
       <div className="w-full max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div 
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          className="text-center mb-20 relative z-10"
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+          transition={{ duration: 1, delay: 0.1, ease: "easeOut" }}
+          style={{ y: headerY }}
         >
           <motion.div 
             className={`inline-flex items-center px-6 py-3 rounded-full text-sm font-medium mb-6 transition-colors duration-500 ${
@@ -79,31 +110,39 @@ export default function Skills() {
 
         {/* Skills Grid */}
         <motion.div 
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8"
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-          transition={{ staggerChildren: 0.1, duration: 0.8 }}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 relative z-10"
+          initial={{ opacity: 0, y: 100 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.3, staggerChildren: 0.15 }}
+          style={{ y: gridY }}
         >
           {skills.map((skill, index) => (
             <motion.div
               key={skill.name}
               className="group relative"
-              variants={fadeInUp}
+              initial={{ opacity: 0, y: 100, rotateX: -15 }}
+              animate={isInView ? { 
+                opacity: 1, 
+                y: 0, 
+                rotateX: 0,
+                transition: {
+                  duration: 0.8,
+                  delay: index * 0.15,
+                  ease: "easeOut"
+                }
+              } : {}}
               whileHover={{ 
                 scale: 1.08, 
                 y: -10,
                 rotateY: 5,
-                rotateX: 5
+                transition: { duration: 0.3 }
               }}
-              transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
-              animate={hoveredSkill === skill.name ? { rotateX: 0 } : {}}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              viewport={{ once: true }}
               onHoverStart={() => setHoveredSkill(skill.name)}
               onHoverEnd={() => setHoveredSkill(null)}
-              style={{ transformStyle: "preserve-3d" }}
+              style={{
+                transformStyle: "preserve-3d",
+                perspective: "1000px"
+              }}
             >
               <div 
                 className="relative p-6 sm:p-8 rounded-2xl shadow-lg overflow-hidden transition-all duration-500 group-hover:shadow-2xl"
@@ -114,37 +153,8 @@ export default function Skills() {
                     : undefined
                 }}
               >
-                {/* Floating Particles */}
-                <div className="absolute inset-0 overflow-hidden">
-                  {[...Array(6)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-1 h-1 bg-white/30 rounded-full"
-                      initial={{
-                        x: Math.random() * 100 + '%',
-                        y: Math.random() * 100 + '%',
-                      }}
-                      animate={hoveredSkill === skill.name ? {
-                        x: [Math.random() * 100 + '%', Math.random() * 100 + '%'],
-                        y: [Math.random() * 100 + '%', Math.random() * 100 + '%'],
-                        opacity: [0.3, 0.8, 0.3],
-                        scale: [1, 1.5, 1]
-                      } : {}}
-                      transition={{
-                        duration: 2 + Math.random() * 2,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                        ease: "easeInOut"
-                      }}
-                    />
-                  ))}
-                </div>
-
                 {/* Background glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                {/* Animated border */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-white/20 transition-all duration-300"></div>
                 
                 <div className="relative z-10 text-center">
                   <motion.div 
@@ -181,6 +191,6 @@ export default function Skills() {
           ))}
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

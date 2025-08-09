@@ -1,13 +1,28 @@
-import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function Hero() {
   const { theme } = useTheme();
+  const ref = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [displayText, setDisplayText] = useState('');
   const fullText = 'Ihtisham';
   const [showCursor, setShowCursor] = useState(true);
+
+  // Advanced scroll animations
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  });
+
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  
+  const smoothY = useSpring(heroY, { stiffness: 100, damping: 30 });
+  const smoothOpacity = useSpring(heroOpacity, { stiffness: 100, damping: 30 });
+  const smoothScale = useSpring(heroScale, { stiffness: 100, damping: 30 });
 
   // Typewriter effect
   useEffect(() => {
@@ -46,7 +61,15 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="w-full min-h-screen flex items-center justify-center px-8 relative overflow-hidden">
+    <motion.section 
+      ref={ref}
+      className="w-full min-h-screen flex items-center justify-center px-8 relative overflow-hidden"
+      style={{
+        y: smoothY,
+        opacity: smoothOpacity,
+        scale: smoothScale
+      }}
+    >
       {/* Interactive Background with animated gradient */}
       <div className="absolute inset-0 w-full h-full">
         <div className={`absolute inset-0 transition-colors duration-500 ${
@@ -132,7 +155,7 @@ export default function Hero() {
         }}
       >
         <motion.div
-          className="mb-8 flex justify-center"
+          className="mb-4 flex justify-center"
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.1 }}
@@ -148,7 +171,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.h1 
-          className={`text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black mb-10 leading-tight text-center transition-colors duration-500 ${
+          className={`text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black mb-6 leading-tight text-center transition-colors duration-500 ${
             theme === 'dark' ? 'text-white' : 'text-gray-900'
           }`}
           initial={{ opacity: 0, y: 30 }}
@@ -157,7 +180,7 @@ export default function Hero() {
         >
           Hi, I&apos;m{' '}
           <motion.span 
-            className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent block sm:inline relative name-effect-3 transition-all duration-500"
+            className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent block sm:inline relative transition-all duration-500"
             whileHover={{
               scale: 1.02,
               rotateY: 5
@@ -176,7 +199,7 @@ export default function Hero() {
         </motion.h1>
         
         <motion.h2 
-          className={`text-2xl sm:text-4xl lg:text-5xl font-bold mb-8 text-center transition-colors duration-500 ${
+          className={`text-2xl sm:text-4xl lg:text-5xl font-bold mb-4 text-center transition-colors duration-500 ${
             theme === 'dark' ? 'text-white/90' : 'text-gray-800'
           }`}
           initial={{ opacity: 0, y: 30 }}
@@ -187,7 +210,7 @@ export default function Hero() {
         </motion.h2>
         
         <motion.p 
-          className={`text-lg sm:text-xl lg:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed text-center px-4 transition-colors duration-500 ${
+          className={`text-lg sm:text-xl lg:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed text-center px-4 transition-colors duration-500 ${
             theme === 'dark' ? 'text-white/70' : 'text-gray-600'
           }`}
           initial={{ opacity: 0, y: 30 }}
@@ -233,6 +256,6 @@ export default function Hero() {
           </motion.button>
         </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }

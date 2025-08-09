@@ -197,21 +197,24 @@ export default function Contact() {
                     📧
                   </div>
                   <div>
-                    <h3 className={`font-semibold text-lg mb-2 transition-colors duration-500 ${
+                    <h3 className={`font-semibold text-lg transition-colors duration-500 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>Email</h3>
                     <p className={`transition-colors duration-500 ${
                       theme === 'dark' ? 'text-white/70' : 'text-gray-600'
-                    }`}>your.email@example.com</p>
+                    }`}>ihtisham938@gmail.com</p>
                   </div>
                 </div>
               </motion.div>
 
-              <motion.div
-                className={`p-6 backdrop-blur-sm rounded-2xl border transition-colors duration-500 ${
+              <motion.a
+                href="https://www.linkedin.com/in/ihtisham-ali-29b1101b5/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`block p-6 backdrop-blur-sm rounded-2xl border transition-colors duration-300 cursor-pointer ${
                   theme === 'dark'
-                    ? 'bg-white/5 border-white/10'
-                    : 'bg-gray-800/5 border-gray-300/20'
+                    ? 'bg-white/5 border-white/10 hover:bg-white/10'
+                    : 'bg-gray-800/5 border-gray-300/20 hover:bg-gray-800/10'
                 }`}
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
@@ -221,7 +224,7 @@ export default function Contact() {
                     💼
                   </div>
                   <div>
-                    <h3 className={`font-semibold text-lg mb-2 transition-colors duration-500 ${
+                    <h3 className={`font-semibold text-lg transition-colors duration-500 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>LinkedIn</h3>
                     <p className={`transition-colors duration-500 ${
@@ -229,13 +232,16 @@ export default function Contact() {
                     }`}>Connect with me</p>
                   </div>
                 </div>
-              </motion.div>
+              </motion.a>
 
-              <motion.div
-                className={`p-6 backdrop-blur-sm rounded-2xl border transition-colors duration-500 ${
+              <motion.a
+                href="https://github.com/ihtisham938"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`block p-6 backdrop-blur-sm rounded-2xl border transition-colors duration-300 cursor-pointer ${
                   theme === 'dark'
-                    ? 'bg-white/5 border-white/10'
-                    : 'bg-gray-800/5 border-gray-300/20'
+                    ? 'bg-white/5 border-white/10 hover:bg-white/10'
+                    : 'bg-gray-800/5 border-gray-300/20 hover:bg-gray-800/10'
                 }`}
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
@@ -245,7 +251,7 @@ export default function Contact() {
                     🚀
                   </div>
                   <div>
-                    <h3 className={`font-semibold text-lg mb-2 transition-colors duration-500 ${
+                    <h3 className={`font-semibold text-lg transition-colors duration-500 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>GitHub</h3>
                     <p className={`transition-colors duration-500 ${
@@ -253,7 +259,7 @@ export default function Contact() {
                     }`}>View my projects</p>
                   </div>
                 </div>
-              </motion.div>
+              </motion.a>
             </div>
           </motion.div>
         </div>
